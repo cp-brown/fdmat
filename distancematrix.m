@@ -11,7 +11,7 @@
 %              distance between the i-th data site and j-th center
 % Algorithm was essentially suggested by Paritosh Mokhasi
 
-function DM = DistanceMatrix(dsites,ctrs)
+function DM = distancematrix(dsites,ctrs)
   M = size(dsites,1); N = size(ctrs,1);
 % Algorithm is based on expanding the terms and computing each term
 % explicitly, i.e.  
