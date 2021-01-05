@@ -3,13 +3,14 @@ MDIR = /usr/local/MATLAB/R2020b
 # Linking with MATLAB
 MINCL = -I$(MDIR)/extern/include -shared
 
-# MKL root
-#MKLROOT = /opt/intel/oneapi/mkl/2021.1.1
+# Locations of source code, object files, and module files
+SRC = ./src
+OBJS = ./objs
+MODS = ./mods
 
 # Fortran compiler
 F90 = gfortran
-FLAGS = -Isrc -fPIC -cpp -O2 #-I"${MKLROOT}/include" -m64
-#LINKLINE = -L${MKLROOT}/lib/intel64 -lmkl_rt -Wl,--no-as-needed -lpthread -lm -ldl
+FLAGS = -I$(SRC) -fPIC -cpp -O2 -J$(MODS)
 
 # Extension name
 EXT = mexa64
@@ -18,18 +19,17 @@ EXT = mexa64
 
 all: distancematrixf.$(EXT)
 
-global.o: ./src/global.f90
+$(OBJS)/global.o: $(SRC)/global.f90
 	$(F90) -o $@ -c $(FLAGS) $<
 
-distancematrix.o: ./src/distancematrix.f90 global.o
+$(OBJS)/distancematrix.o: $(SRC)/distancematrix.f90 $(OBJS)/global.o
 	$(F90) -o $@ -c $(FLAGS) $<
 
-interface.o: ./src/interface.f90 distancematrix.o global.o
+$(OBJS)/interface.o: $(SRC)/interface.f90 $(OBJS)/distancematrix.o $(OBJS)/global.o
 	$(F90) -o $@ -c $(FLAGS) $(MINCL) $<
 
-distancematrixf.$(EXT): interface.o distancematrix.o global.o
+distancematrixf.$(EXT): $(OBJS)/interface.o $(OBJS)/distancematrix.o $(OBJS)/global.o
 	$(F90) -o $@ $(FLAGS) $(MINCL) $^
-	rm -f *.o *.mod
 
 clean:
-	rm -f *.o *.mod *.$(EXT)
+	rm -f $(OBJS)/*.o $(MODS)/*.mod *.$(EXT)
