@@ -9,8 +9,10 @@ OBJS = ./objs
 MODS = ./mods
 
 # Fortran compiler
-F90 = gfortran
-FLAGS = -I$(SRC) -fPIC -cpp -O2 -J$(MODS)
+#F90 = gfortran
+#FLAGS = -I$(SRC) -fPIC -cpp -O2 -J$(MODS)
+F90 = ifort
+FLAGS = -I$(SRC) -O2 -fpp -fpic -module $(MODS) -heap-arrays
 
 # Extension name
 EXT = mexa64
