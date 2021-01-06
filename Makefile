@@ -34,4 +34,9 @@ distancematrixf.$(EXT): $(OBJS)/interface.o $(OBJS)/distancematrix.o $(OBJS)/glo
 	$(F90) -o $@ $(FLAGS) $(MINCL) $^
 
 clean:
-	rm -f $(OBJS)/*.o $(MODS)/*.mod *.$(EXT)
+	rm -f $(OBJS)/*.o $(MODS)/*.mod *.$(EXT) standalone
+
+
+
+standalone: $(SRC)/standalone.f90 $(OBJS)/distancematrix.o $(OBJS)/global.o
+	$(F90) -o $@ $(FLAGS) $^
