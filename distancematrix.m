@@ -10,12 +10,13 @@
 %   DM:     MxN matrix whose i,j position contains the Euclidean
 %              distance between the i-th data site and j-th center
 % Algorithm was essentially suggested by Paritosh Mokhasi
+% Slightly optimized version of the implementation by Gregory Fasshauer
 
 % Algorithm is based on expanding the terms and computing each term
 % explicitly, i.e.  
 %         (x1 - x2)^2 = x1.^2 + x2.^2 - 2*x1*x2;
 
-function DM = distancematrix2(dsites,ctrs)
+function DM = distancematrix(dsites,ctrs)
     ctrs = ctrs';
     DM = sum(dsites'.^2,1)' + sum(ctrs.^2,1) - 2*dsites*ctrs;
     DM = sqrt(DM);

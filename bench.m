@@ -5,7 +5,7 @@ for d = [1,2,3,10,20,30,100]
 
         for j = 1:10
             distancematrix_ref(pts, pts);
-            distancematrix2(pts, pts);
+            distancematrix(pts, pts);
             distancematrixf(pts, pts');
             disp([d,N,j]);
         end
