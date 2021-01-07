@@ -35,16 +35,16 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
     ! Check for proper number of arguments.
     if(nrhs /= 1 .and. nrhs /= 2) then
-        call mexErrMsgIdAndTxt('MATLAB:timestwo:nInput', &
+        call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nInput', &
             'One or two inputs required')
     elseif(nlhs > 1) then
-        call mexErrMsgIdAndTxt('MATLAB:timestwo:nOutput', &
+        call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nOutput', &
             'Too many output arguments')
     endif
 
     ! Check that the input is a number.
     if(mxIsNumeric(prhs(1)) == 0 .or. (nrhs == 2 .and. mxIsNumeric(prhs(2)) == 0)) then
-        call mexErrMsgIdAndTxt('MATLAB:timestwo:NonNumeric', &
+        call mexErrMsgIdAndTxt('MATLAB:distancematrixf:NonNumeric', &
             'Inputs must be a numeric')
     endif
 
@@ -87,6 +87,11 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
       call distancematrix_sym(dsites_input, dmat_output, error)
     else
       call distancematrix(dsites_input, cntrs_input, dmat_output, error)
+    end if
+    if (error /= 0) then
+      if (error == 1) then
+        call mexErrMsgIdAndTxt('MATLAB:distancematrixf', 'Data dimensions do not match')
+      end if
     end if
 
     ! Load the data into y_ptr, which is the output to MATLAB.

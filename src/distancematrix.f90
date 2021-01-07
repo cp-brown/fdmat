@@ -43,7 +43,6 @@ subroutine distancematrix(datasites, centers, dmat, error)
 
     ! Quit with error if dimensions aren't compatible
     if (size(centers, 1) /= d) then
-        write(*,*) 'dimensions do not match'
         error = 1
         return
     end if
@@ -75,8 +74,7 @@ subroutine distancematrix(datasites, centers, dmat, error)
 
 end subroutine distancematrix
 
-
-
+! A simplified version for the important special case when datasites == centers
 subroutine distancematrix_sym(pts, dmat, error)
 
   ! --- INPUT DECLARATIONS --- !
@@ -133,6 +131,5 @@ subroutine distancematrix_sym(pts, dmat, error)
     return
 
 end subroutine distancematrix_sym
-
 
 end module distancematrix_mod
