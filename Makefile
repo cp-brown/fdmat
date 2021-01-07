@@ -10,7 +10,7 @@ MODS = ./mods
 
 # Fortran compiler
 F90 = ifort
-FLAGS = -warn errors -fpp -fpic -heap-arrays -nogen-interfaces -module $(MODS)
+FLAGS = -i8 -warn errors -fpp -fpic -heap-arrays -nogen-interfaces -module $(MODS)
 
 # Extension name
 EXT = mexa64
