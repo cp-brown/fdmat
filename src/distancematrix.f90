@@ -13,7 +13,7 @@ subroutine distancematrix(datasites, centers, dmat, error)
 
     ! Location of data: M x d matrix
     real(dp), intent(in) :: datasites(:,:)
-    ! Evaluation points: d x N matrix
+    ! Evaluation points: N x d matrix
     real(dp), intent(in) :: centers(:,:)
 
   ! --- OUTPUT DECLARATIONS --- !
@@ -26,7 +26,7 @@ subroutine distancematrix(datasites, centers, dmat, error)
   ! --- LOCAL DECLARATIONS --- !
 
     ! Number of points in datasites and centers, respectively
-    integer :: N, M
+    integer :: M, N
     ! Dimensionality of data
     integer :: d
     ! Temporary arrays to hold sums of squares
@@ -38,11 +38,11 @@ subroutine distancematrix(datasites, centers, dmat, error)
 
     ! Get sizes
     M = size(datasites, 1)
-    N = size(centers, 2)
+    N = size(centers, 1)
     d = size(datasites, 2)
 
     ! Quit with error if dimensions aren't compatible
-    if (size(centers, 1) /= d) then
+    if (size(centers, 2) /= d) then
         error = 1
         return
     end if
@@ -54,12 +54,12 @@ subroutine distancematrix(datasites, centers, dmat, error)
   ! --- ALGORITHM --- !
 
     ! Initializes dmat as -2*datasites*centers
-    call gemm(datasites, centers, dmat, 'n', 'n', -2.0_dp)
+    call gemm(datasites, centers, dmat, 'n', 't', -2.0_dp)
 
     ! Add matrix of sums of squares
     allocate(ss_dsites(M), ss_cntrs(N))
     ss_dsites = sum(datasites**2.0_dp, 2)
-    ss_cntrs = sum(centers**2.0_dp, 1)
+    ss_cntrs = sum(centers**2.0_dp, 2)
     do k = 1, N
         dmat(:,k) = dmat(:,k) + ss_dsites(:) + ss_cntrs(k)
     end do

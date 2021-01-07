@@ -56,8 +56,8 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
     dsites_size = m * d1
 
     if (nrhs == 2) then
-      d2 = mxGetM(prhs(2))
-      n = mxGetN(prhs(2))
+      n = mxGetM(prhs(2))
+      d2 = mxGetN(prhs(2))
       cntrs_size = n * d2
     else
       n = m
@@ -72,7 +72,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
     if (nrhs == 2) then
       cntrs_ptr = mxGetDoubles(prhs(2))
-      allocate(cntrs_input(d2,n))
+      allocate(cntrs_input(n,d2))
       call mxCopyPtrToReal8(cntrs_ptr, cntrs_input, cntrs_size)
     end if
 

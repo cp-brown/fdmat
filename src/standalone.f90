@@ -11,12 +11,12 @@ interface
     end subroutine write_matrix
 end interface
 
-real(dp) :: dsites(4,2), cntrs(2,3)
+real(dp) :: dsites(4,2), cntrs(3,2)
 real(dp), allocatable :: dmat(:,:)
 integer :: error
 
 dsites = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [4,2])
-cntrs = reshape([1.0_dp, 3.0_dp, 2.0_dp, 2.0_dp, 3.0_dp, 1.0_dp], [2,3])
+cntrs = reshape([1.0_dp, 2.0_dp, 3.0_dp, 3.0_dp, 2.0_dp, 1.0_dp], [3,2])
 
 call write_matrix(dsites)
 write(*,*)
