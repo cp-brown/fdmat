@@ -13,6 +13,7 @@ end interface
 
 real(dp) :: dsites(4,2), cntrs(2,3)
 real(dp), allocatable :: dmat(:,:)
+integer :: error
 
 dsites = reshape([1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp, 1.0_dp, 2.0_dp, 3.0_dp, 4.0_dp], [4,2])
 cntrs = reshape([1.0_dp, 3.0_dp, 2.0_dp, 2.0_dp, 3.0_dp, 1.0_dp], [2,3])
@@ -22,7 +23,7 @@ write(*,*)
 call write_matrix(cntrs)
 write(*,*)
 
-dmat = distancematrix(dsites, cntrs)
+call distancematrix(dsites, cntrs, dmat, error)
 
 call write_matrix(dmat)
 

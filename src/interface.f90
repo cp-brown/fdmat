@@ -29,6 +29,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
 
     ! Arguments for computational routine:
     real(dp), allocatable :: dsites_input(:,:), cntrs_input(:,:), dmat_output(:,:)
+    integer :: error
 
   ! --- Input checking --- !
 
@@ -72,7 +73,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   ! --- Computation + translate back to MATLAB --- !
 
     ! Call the computational subroutine
-    dmat_output = distancematrix(dsites_input, cntrs_input)
+    call distancematrix(dsites_input, cntrs_input, dmat_output, error)
 
     ! Load the data into y_ptr, which is the output to MATLAB.
     call mxCopyReal8ToPtr(dmat_output, dmat_ptr, dmat_size)

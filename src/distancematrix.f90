@@ -7,10 +7,11 @@ public distancematrix
 
 contains
 
-function distancematrix(datasites, centers) result(dmat)
+subroutine distancematrix(datasites, centers, dmat, error)
 
     real(dp), intent(in) :: datasites(:,:), centers(:,:)
-    real(dp), allocatable :: dmat(:,:)
+    real(dp), allocatable, intent(out) :: dmat(:,:)
+    integer, intent(out) :: error
 
     integer :: N, M, d, k
     real(dp), allocatable :: ss_dsites(:), ss_cntrs(:)
@@ -20,7 +21,11 @@ function distancematrix(datasites, centers) result(dmat)
     d = size(datasites, 2)
 
     ! Make sure size(centers, 1) is also d
-    if (size(centers, 1) /= d) stop "dimensions do not match"
+    if (size(centers, 1) /= d) then
+        write(*,*) 'dimensions do not match'
+        error = 1
+        return
+    end if
 
     if (allocated(dmat)) deallocate(dmat)
     allocate(dmat(M,N))
@@ -36,6 +41,9 @@ function distancematrix(datasites, centers) result(dmat)
     deallocate(ss_dsites, ss_cntrs)
     dmat = dmat**0.5_dp
 
-end function distancematrix
+    error = 0
+    return
+
+end subroutine distancematrix
 
 end module distancematrix_mod
