@@ -1,6 +1,6 @@
 module distancematrix_mod
 use global
-!use blas95
+use blas95
 implicit none
 private
 public distancematrix
@@ -26,8 +26,9 @@ function distancematrix(datasites, centers) result(dmat)
     
     ! Algorithm
     dmat = spread(sum(datasites**2.0_dp, 2), 2, N) &
-        + spread(sum(centers**2.0_dp, 1), 1, M) &
-        - 2.0_dp * matmul(datasites, centers)
+        + spread(sum(centers**2.0_dp, 1), 1, M) !&
+        !- 2.0_dp * matmul(datasites, centers)
+    call gemm(datasites, centers, dmat, 'n', 'n', -2.0_dp, 1.0_dp)
     dmat = dmat**0.5_dp
 
 end function distancematrix
