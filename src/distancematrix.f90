@@ -12,7 +12,8 @@ function distancematrix(datasites, centers) result(dmat)
     real(dp), intent(in) :: datasites(:,:), centers(:,:)
     real(dp), allocatable :: dmat(:,:)
 
-    integer :: N, M, d
+    integer :: N, M, d, k
+    real(dp), allocatable :: ss_dsites(:), ss_cntrs(:)
 
     M = size(datasites, 1)
     N = size(centers, 2)
@@ -25,10 +26,14 @@ function distancematrix(datasites, centers) result(dmat)
     allocate(dmat(M,N))
     
     ! Algorithm
-    dmat = spread(sum(datasites**2.0_dp, 2), 2, N) &
-        + spread(sum(centers**2.0_dp, 1), 1, M) !&
-        !- 2.0_dp * matmul(datasites, centers)
-    call gemm(datasites, centers, dmat, 'n', 'n', -2.0_dp, 1.0_dp)
+    call gemm(datasites, centers, dmat, 'n', 'n', -2.0_dp)
+    allocate(ss_dsites(M), ss_cntrs(N))
+    ss_dsites = sum(datasites**2.0_dp, 2)
+    ss_cntrs = sum(centers**2.0_dp, 1)
+    do k = 1, N
+        dmat(:,k) = dmat(:,k) + ss_dsites(:) + ss_cntrs(k)
+    end do
+    deallocate(ss_dsites, ss_cntrs)
     dmat = dmat**0.5_dp
 
 end function distancematrix
