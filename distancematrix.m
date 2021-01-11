@@ -17,6 +17,9 @@
 %         (x1 - x2)^2 = x1.^2 + x2.^2 - 2*x1*x2;
 
 function DM = distancematrix(dsites,ctrs)
+    if nargin < 2
+        ctrs = dsites;
+    end
     ctrs = ctrs';
     DM = sum(dsites'.^2,1)' + sum(ctrs.^2,1) - 2*dsites*ctrs;
     DM = sqrt(DM);
