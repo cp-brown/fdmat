@@ -8,7 +8,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   ! --- Declarations - I/O --- !
 
     ! number of input and output arguments, respectively
-    integer :: nrhs, nlhs
+    integer*4 :: nrhs, nlhs
     ! pointer to inputs and outputs, respectively
     mwPointer :: prhs(*), plhs(*)
 
@@ -34,13 +34,13 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
   ! --- Input checking --- !
 
     ! Check for proper number of arguments.
-    if(nrhs /= 1 .and. nrhs /= 2) then
+    if (nrhs /= 1 .and. nrhs /= 2) then
         call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nInput', &
             'One or two inputs required')
-    elseif(nlhs > 1) then
+    else if (nlhs > 1) then
         call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nOutput', &
             'Too many output arguments')
-    endif
+    end if
 
     ! Check that the input is a number.
     if(mxIsNumeric(prhs(1)) == 0 .or. (nrhs == 2 .and. mxIsNumeric(prhs(2)) == 0)) then
