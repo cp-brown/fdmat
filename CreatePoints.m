@@ -33,7 +33,7 @@ switch gridtype
     case 'l'
         points = lhsamp(N,d);
     case 'r'
-        rand('state',47); 
+        %rand('state',47); 
         points = rand(N,d);
     case 's'
         temp = sobolset(d);
