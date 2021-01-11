@@ -1,6 +1,5 @@
-# MATLAB root
+# For linking with MATLAB
 MATDIR = /usr/local/MATLAB/R2020b
-# Linking with MATLAB
 MATINCL = -I$(MATDIR)/extern/include
 
 # Locations of source code, object files, and module files
@@ -15,7 +14,7 @@ FLAGS = -i8 -warn errors -fpp -fpic -heap-arrays -nogen-interfaces -module $(MOD
 # Extension name
 EXT = mexa64
 
-# MKL stuff
+# For linking with MKL and BLAS95
 MKLROOT = /opt/intel/oneapi/mkl/latest
 MKLINCL = -I$(MKLROOT)/include/intel64/ilp64
 MKLLINK = -Wl,--start-group ${MKLROOT}/lib/intel64/libmkl_intel_ilp64.a ${MKLROOT}/lib/intel64/libmkl_intel_thread.a ${MKLROOT}/lib/intel64/libmkl_core.a -Wl,--end-group -liomp5 -lpthread -lm -ldl
@@ -23,7 +22,8 @@ BLAS95 = $(MKLROOT)/lib/intel64/libmkl_blas95_ilp64.a
 
 
 
-all: standalone distancematrixf.$(EXT)
+.PHONY: all clean
+all: distancematrixf.$(EXT)
 
 $(OBJS)/global.o: $(SRC)/global.f90
 	$(F90) $(FLAGS) $< -o $@ -c
@@ -40,8 +40,8 @@ distancematrixf.$(EXT): $(OBJS)/interface.o $(OBJS)/distancematrix.o $(OBJS)/glo
 clean:
 	rm -f $(OBJS)/*.o $(MODS)/*.mod *.$(EXT) standalone
 
-$(OBJS)/standalone.o: $(SRC)/standalone.f90 $(OBJS)/distancematrix.o $(OBJS)/global.o
-	$(F90) $(FLAGS) $< -o $@ -c
+#$(OBJS)/standalone.o: $(SRC)/standalone.f90 $(OBJS)/distancematrix.o $(OBJS)/global.o
+#	$(F90) $(FLAGS) $< -o $@ -c
 
-standalone: $(OBJS)/standalone.o $(OBJS)/distancematrix.o $(OBJS)/global.o
-	$(F90) $(FLAGS) $(MKLINCL) $^ $(BLAS95) $(MKLLINK) -o $@
+#standalone: $(OBJS)/standalone.o $(OBJS)/distancematrix.o $(OBJS)/global.o
+#	$(F90) $(FLAGS) $(MKLINCL) $^ $(BLAS95) $(MKLLINK) -o $@
