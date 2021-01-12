@@ -18,15 +18,17 @@ function DM = distancematrix(dsites, ctrs)
 
 % Symmetric version
 if nargin < 2
-    DM = sum(dsites'.^2,1)' + sum(dsites'.^2,1) - 2*(dsites*dsites');
+    ss_pts = sum(dsites'.^2, 1);
+    DM = ss_pts + ss_pts - 2*(dsites*dsites');
     DM = max(DM, 0);
-    DM = sqrt(DM);
+    DM = realsqrt(DM);
 
 % Asymmetric version
 else
     ctrs = ctrs';
-    DM = sum(dsites'.^2,1)' + sum(ctrs.^2,1) - 2*dsites*ctrs;
-    DM = sqrt(DM);
+    DM = sum(dsites'.^2, 1)' + sum(ctrs.^2, 1) - 2*dsites*ctrs;
+    DM = max(DM, 0);
+    DM = realsqrt(DM);
 end
 
 end
