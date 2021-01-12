@@ -43,10 +43,10 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
     end if
 
     ! Check that the input is a number.
-    if(mxIsNumeric(prhs(1)) == 0 .or. (nrhs == 2 .and. mxIsNumeric(prhs(2)) == 0)) then
-        call mexErrMsgIdAndTxt('MATLAB:distancematrixf:NonNumeric', &
-            'Inputs must be a numeric')
-    endif
+    !if (mxIsNumeric(prhs(1)) == 0 .or. (nrhs == 2 .and. mxIsNumeric(prhs(2)) == 0)) then
+    !    call mexErrMsgIdAndTxt('MATLAB:distancematrixf:NonNumeric', &
+    !        'Inputs must be a numeric')
+    !endif
 
   ! --- Translate to Fortran data types --- !
 
