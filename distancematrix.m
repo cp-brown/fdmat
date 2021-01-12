@@ -16,11 +16,14 @@
 % explicitly, i.e.  
 %         (x1 - x2)^2 = x1.^2 + x2.^2 - 2*x1*x2;
 
-function DM = distancematrix(dsites,ctrs)
+function DM = distancematrix(dsites, ctrs)
     if nargin < 2
-        ctrs = dsites;
+        DM = sum(dsites'.^2,1)' + sum(dsites'.^2,1) - 2*(dsites*dsites');
+        DM = max(DM, 0);
+        DM = sqrt(DM);
+    else
+        ctrs = ctrs';
+        DM = sum(dsites'.^2,1)' + sum(ctrs.^2,1) - 2*dsites*ctrs;
+        DM = sqrt(DM);
     end
-    ctrs = ctrs';
-    DM = sum(dsites'.^2,1)' + sum(ctrs.^2,1) - 2*dsites*ctrs;
-    DM = sqrt(DM);
 end
