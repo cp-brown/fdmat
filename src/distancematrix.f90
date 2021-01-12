@@ -66,6 +66,9 @@ subroutine distancematrix(datasites, centers, dmat, error)
     deallocate(ss_dsites, ss_cntrs)
 
     ! Take square root of all elements to finish
+    where (dmat < 0.0_dp)
+        dmat = 0.0_dp
+    end where
     dmat = dmat**0.5_dp
 
     ! Successful exit
@@ -124,6 +127,9 @@ subroutine distancematrix_sym(pts, dmat, error)
     deallocate(ss_pts)
 
     ! Take square root of all elements to finish
+    where (dmat < 0.0_dp)
+        dmat = 0.0_dp
+    end where
     dmat = dmat**0.5_dp
 
     ! Successful exit
