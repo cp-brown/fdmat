@@ -31,72 +31,67 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
     real(dp), allocatable :: dsites_input(:,:), cntrs_input(:,:), dmat_output(:,:)
     integer :: error
 
-  ! --- Input checking --- !
+  ! ---  --- !
 
-    ! Check for proper number of arguments.
-    if (nrhs /= 1 .and. nrhs /= 2) then
-        call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nInput', &
-            'One or two inputs required')
-    else if (nlhs > 1) then
+    if (nlhs > 1) then
         call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nOutput', &
             'Too many output arguments')
     end if
 
-    ! Check that the input is a number.
-    !if (mxIsNumeric(prhs(1)) == 0 .or. (nrhs == 2 .and. mxIsNumeric(prhs(2)) == 0)) then
-    !    call mexErrMsgIdAndTxt('MATLAB:distancematrixf:NonNumeric', &
-    !        'Inputs must be a numeric')
-    !endif
+    select case (nrhs)
+      case (1)
 
-  ! --- Translate to Fortran data types --- !
+        m = mxGetM(prhs(1))
+        d1 = mxGetN(prhs(1))
+        dsites_size = m * d1
 
-    ! Get the sizes of the arrays
-    m = mxGetM(prhs(1))
-    d1 = mxGetN(prhs(1))
-    dsites_size = m * d1
+        dmat_size = m**2
 
-    if (nrhs == 2) then
-      n = mxGetM(prhs(2))
-      d2 = mxGetN(prhs(2))
-      cntrs_size = n * d2
-    else
-      n = m
-    end if
+        dsites_ptr = mxGetDoubles(prhs(1))
+        allocate(dsites_input(m, d1))
+        call mxCopyPtrToReal8(dsites_ptr, dsites_input, dsites_size)
 
-    dmat_size = m * n
+        plhs(1) = mxCreateDoubleMatrix(m, m, 0)
+        dmat_ptr = mxGetDoubles(plhs(1))
 
-    ! Create Fortran arrays from the input arguments
-    dsites_ptr = mxGetDoubles(prhs(1))
-    allocate(dsites_input(m,d1))
-    call mxCopyPtrToReal8(dsites_ptr, dsites_input, dsites_size)
+        call distancematrix_sym(dsites_input, dmat_output, error)
 
-    if (nrhs == 2) then
-      cntrs_ptr = mxGetDoubles(prhs(2))
-      allocate(cntrs_input(n,d2))
-      call mxCopyPtrToReal8(cntrs_ptr, cntrs_input, cntrs_size)
-    end if
+      case (2)
 
-    ! Create matrix for the return argument.
-    plhs(1) = mxCreateDoubleMatrix(m, n, 0)
-    dmat_ptr = mxGetDoubles(plhs(1))
+        m = mxGetM(prhs(1))
+        d1 = mxGetN(prhs(1))
+        dsites_size = m * d1
 
-  ! --- Computation + translate back to MATLAB --- !
+        n = mxGetM(prhs(2))
+        d2 = mxGetN(prhs(2))
+        cntrs_size = n * d2
 
-    ! Call the computational subroutine
-    if (nrhs == 1) then
-      call distancematrix_sym(dsites_input, dmat_output, error)
-    else
-      call distancematrix(dsites_input, cntrs_input, dmat_output, error)
-    end if
-    if (error /= 0) then
-      if (error == 1) then
+        dmat_size = m * n
+
+        dsites_ptr = mxGetDoubles(prhs(1))
+        allocate(dsites_input(m, d1))
+        call mxCopyPtrToReal8(dsites_ptr, dsites_input, dsites_size)
+
+        cntrs_ptr = mxGetDoubles(prhs(2))
+        allocate(cntrs_input(n, d2))
+        call mxCopyPtrToReal8(cntrs_ptr, cntrs_input, cntrs_size)
+
+        plhs(1) = mxCreateDoubleMatrix(m, n, 0)
+        dmat_ptr = mxGetDoubles(plhs(1))
+
+        call distancematrix(dsites_input, cntrs_input, dmat_output, error)
+
+      case default
+        call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nInput', 'One or two inputs required')
+
+    end select
+
+    select case (error)
+      case (0)
+        call mxCopyReal8ToPtr(dmat_output, dmat_ptr, dmat_size)
+        return
+      case (1)
         call mexErrMsgIdAndTxt('MATLAB:distancematrixf', 'Data dimensions do not match')
-      end if
-    end if
-
-    ! Load the data into y_ptr, which is the output to MATLAB.
-    call mxCopyReal8ToPtr(dmat_output, dmat_ptr, dmat_size)
-
-    return
+    end select
 
 end subroutine mexFunction
