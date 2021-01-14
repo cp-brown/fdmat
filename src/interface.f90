@@ -79,7 +79,7 @@ subroutine mexFunction(nlhs, plhs, nrhs, prhs)
         plhs(1) = mxCreateDoubleMatrix(m, n, 0)
         dmat_ptr = mxGetDoubles(plhs(1))
 
-        call distancematrix(dsites_input, cntrs_input, dmat_output, error)
+        call distancematrix_asym(dsites_input, cntrs_input, dmat_output, error)
 
       case default
         call mexErrMsgIdAndTxt('MATLAB:distancematrixf:nInput', 'One or two inputs required')

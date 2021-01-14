@@ -28,17 +28,23 @@ all: distancematrixf.$(EXT)
 $(OBJS)/global.o: $(SRC)/global.f90
 	$(F90) $(FLAGS) $< -o $@ -c
 
-$(OBJS)/distancematrix.o: $(SRC)/distancematrix.f90 $(OBJS)/global.o
+$(OBJS)/distancematrix_mod.o: $(SRC)/distancematrix_mod.f90 $(OBJS)/global.o
 	$(F90) $(FLAGS) $(MKLINCL) $< -o $@ -c
 
-$(OBJS)/interface.o: $(SRC)/interface.f90 $(OBJS)/distancematrix.o $(OBJS)/global.o
+$(OBJS)/distancematrix_sym.o: $(SRC)/distancematrix_sym.f90 $(OBJS)/distancematrix_mod.o
+	$(F90) $(FLAGS) $< -o $@ -c
+
+$(OBJS)/distancematrix_asym.o: $(SRC)/distancematrix_asym.f90 $(OBJS)/distancematrix_mod.o
+	$(F90) $(FLAGS) $< -o $@ -c
+
+$(OBJS)/interface.o: $(SRC)/interface.f90 $(OBJS)/distancematrix_mod.o $(OBJS)/global.o
 	$(F90) $(FLAGS) $(MATINCL) $< -o $@ -c
 
-distancematrixf.$(EXT): $(OBJS)/interface.o $(OBJS)/distancematrix.o $(OBJS)/global.o
+distancematrixf.$(EXT): $(OBJS)/interface.o $(OBJS)/distancematrix_mod.o $(OBJS)/distancematrix_sym.o $(OBJS)/distancematrix_asym.o $(OBJS)/global.o
 	$(F90) $(FLAGS) $(MATINCL) $(MKLINCL) $^ $(BLAS95) $(MKLLINK) -o $@ -shared
 
 clean:
-	rm -f $(OBJS)/*.o $(MODS)/*.mod *.$(EXT) standalone
+	rm -f $(OBJS)/*.o $(MODS)/*.mod $(MODS)/*.smod *.$(EXT) standalone
 
 #$(OBJS)/standalone.o: $(SRC)/standalone.f90 $(OBJS)/distancematrix.o $(OBJS)/global.o
 #	$(F90) $(FLAGS) $< -o $@ -c
