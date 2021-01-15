@@ -5,18 +5,25 @@ contains
 
 module procedure distancematrix_sym
 
-  ! --- LOCAL DECLARATIONS --- !
+  ! ----------------------------------------------------------------------------
+  ! Declarations of local variables
+  ! ----------------------------------------------------------------------------
 
-    ! Number of points in datasites and centers, respectively
+    ! Number of points
     integer :: M
+
     ! Dimensionality of data
     integer :: d
-    ! Temporary arrays to hold sums of squares
+
+    ! Temporary array to hold sums of squares
     real(dp), allocatable :: ss_pts(:)
+
     ! Iterator
     integer :: k
-    
-  ! --- SETUP --- !
+
+  ! ----------------------------------------------------------------------------
+  ! Setup
+  ! ----------------------------------------------------------------------------
 
     ! Get sizes
     M = size(pts, 1)
@@ -26,7 +33,9 @@ module procedure distancematrix_sym
     if (allocated(dmat)) deallocate(dmat)
     allocate(dmat(M,M))
     
-  ! --- ALGORITHM --- !
+  ! ----------------------------------------------------------------------------
+  ! Algorithm
+  ! ----------------------------------------------------------------------------
 
     ! Initializes dmat as -2*pts*pts^T
     call gemm(pts, pts, dmat, 'n', 't', -2.0_dp)
